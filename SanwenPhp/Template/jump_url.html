@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>页面正在跳转</title>
+</head>
+<style>
+	#success{
+		color:green;
+	}
+	#failure{
+		color:red;
+	}
+</style>
+<body>
+   消息信息：<span id='{jump_type}'>{jump_message}</span>，跳转地址：<a href="{jump_url}" id="href">{jump_url}</a>，跳转时间：<span id="waitTime">{jump_time}</span>
+</body>
+<script type="text/javascript">
+(function(){
+var wait = document.getElementById('waitTime'),href = document.getElementById('href').href;
+var interval = setInterval(function(){
+	var time = --wait.innerHTML;
+	if(time <= 0) {
+		location.href = href;
+		clearInterval(interval);
+	};
+}, 1000);
+})();
+</script>
+</html>
