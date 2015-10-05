@@ -2,6 +2,7 @@
 //Author: pantingwen pantingwen@hotmail.com
 //Date: 2014-7-8
 class Model {
+	var $is_sql;
 	var $crud;
 	var $jump_url;
 	var $SUCCESS;
@@ -10,7 +11,13 @@ class Model {
 	function __construct() {
 		$db_type=DB_TYPE;
 		Log::write('Molel->__construct->db_type:'.$db_type);
-		$this->crud = new Crud ('Db'.ucfirst($db_type));//change the $db_type first letter to upper
+		if($db_type=='redis'){
+		     $this->is_sql=false;
+		     $this->crud= new Redis();	
+		}else{	
+		     $this->is_sql=true; //set this as is sql
+		     $this->crud = new Crud ('Db'.ucfirst($db_type));//change the $db_type first letter to upper
+		}
 		$this->SUCCESS = 'success';
 		$this->FAILURE = 'failure';
 		if(array_key_exists('HTTP_REFERER',$_SERVER)){
