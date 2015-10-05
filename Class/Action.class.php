@@ -10,7 +10,9 @@
 	 	function __construct(){
 	 		$this->SUCCESS = 'success';
 			$this->FAILURE = 'failure';
-			$this->URL=$_SERVER['HTTP_REFERER'];
+			if(array_key_exists('HTTP_REFERER',$_SERVER)){
+			    $this->URL=$_SERVER['HTTP_REFERER'];
+			}
 	 	}
 	 	
 		public function execute(){
@@ -29,12 +31,6 @@
 			}
 			if(empty($view)){
 				$view=$_GET['action'];
-				//add by pantingwen@gmail.com 2014-08-27 begin
-				//修复在指定应用，没有指定action时的bug
-				if(empty($view)){
-					$view="Index";
-				}
-				//add by pantingwen@gmail.com 2014-08-27 end
 			}
 			//add by pantingwen@hotmail.com 2014-08-05 end
 			//判断当前是不是开启了模板模式
@@ -93,26 +89,6 @@
 			}
 			
 			jump_url($jump_type, $jump_message, $jump_url, 3);
-		}
-		
-		//Author: pantingwen pantingwen@gmail.com
-		//Date: 2014-11-26
-		//处理null数据为""
-		function handlenulldata($data){
-			if(empty($data)){
-				return '';
-			}else{
-				return $data;
-			}
-		}
-		
-		
-		//Author: pantingwen pantingwen@gmail.com
-		//Date: 2014-11-26
-		//处理null数据为""
-		function get_day_for_time($time){
-			$times=explode(" ", $time);
-			return $times[0];
 		}
 	}
 ?>

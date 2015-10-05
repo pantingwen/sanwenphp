@@ -13,7 +13,9 @@ class Model {
 		$this->crud = new Crud ();
 		$this->SUCCESS = 'success';
 		$this->FAILURE = 'failure';
-		$this->jump_url = $_SERVER ['HTTP_REFERER'];
+		if(array_key_exists('HTTP_REFERER',$_SERVER)){
+			$this->jump_url = $_SERVER ['HTTP_REFERER'];
+		}
 	}
 	
 	//Author: pantingwen pantingwen@hotmail.com
@@ -123,66 +125,11 @@ class Model {
 	
 
 	//Author: pantingwen pantingwen@hotmail.com
-	//Date: 2014-08-09
-	//Description:这个方法主要是用来修改数据
+	//Date: 2014-08-05
+	//Description:这个方法主要是用来删除数据
 	function modify($table_name, $table_fields,$table_condition_files) {
-		//Author: pantingwen pantingwen@hotmail.com
-	    //Date: 2014-09-27
-		$autoassisn=$this->autoassisn();
-		//自动赋值的逻辑
-		if(!empty($autoassisn)){
-			foreach ($autoassisn as $key=>$value){
-				//数组里面添加值,最后更新日期
-				if($key=='last_update_date'){
-					$table_fields[$key]=$value;
-				}
-				if($key=='last_update_by'){
-					$table_fields[$key]=$value;
-				}
-			}
-		}
 		$this->crud->modify($table_name, $table_fields,$table_condition_files);
-		return array ('jump_type' => $this->SUCCESS, 'jump_message' => get_langage_message ( "system.lang.php", "MODIFY_SUCCESSED" ) );
-	}
-	
-	//Author: pantingwen pantingwen@hotmail.com
-	//Date: 2014-7-9
-	//Description:这个方法主要是用来获取数据
-	function get_by_page($table_name, $table_fields = NULL,$not_table_condition_fields=NULL,$order_by_contidion=null,$page_now, $page_size) {
-		//print_r($not_table_condition_fields);
-		return $this->crud->get_by_page($table_name, $table_fields,$not_table_condition_fields,$order_by_contidion, $page_now, $page_size);
-	}
-	
-	//Author: pantingwen pantingwen@hotmail.com
-	//Date: 2014-7-9
-	//Description:这个方法主要是用来获取数据
-	function get_by_in($table_name, $table_fields) {
-		//print_r($not_table_condition_fields);
-		return $this->crud->get_by_in($table_name, $table_fields);
-	}
-	
-	//Author: pantingwen pantingwen@hotmail.com
-	//Date: 2014-7-9
-	//Description:这个方法主要是用来获取页数的大小
-	function get_total_page($table_name, $table_fields=null,$not_table_condition_fields=null,$order_by_contidion=null,$page_now,$page_size) {
-		//print_r($not_table_condition_fields);
-		$return_arr=$this->crud->get_total_count($table_name, $table_fields,$not_table_condition_fields,$order_by_contidion, $page_now, $page_size);
-		if(!empty($return_arr[0])){
-			$total_count=$return_arr[0][0];
-			return ceil($total_count/$page_size);
-		}
-	}
-	
-	//Author: pantingwen pantingwen@hotmail.com
-	//Date: 2014-7-9
-	//Description:这个方法主要是用来获取页数的大小
-	function get_total_count($table_name, $table_fields=null,$not_table_condition_fields=null,$order_by_contidion=null,$page_now=null,$page_size=null) {
-		//print_r($not_table_condition_fields);
-		$return_arr=$this->crud->get_total_count($table_name, $table_fields,$not_table_condition_fields,$order_by_contidion, $page_now, $page_size);
-		if(!empty($return_arr[0])){
-			$total_count=$return_arr[0][0];
-			return $total_count;
-		}
+		return array ('jump_type' => $this->SUCCESS, 'jump_message' => get_langage_message ( "system.lang.php", "REMOVE_SUCCESSED" ) );
 	}
 }
 ?>

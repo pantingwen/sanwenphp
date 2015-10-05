@@ -21,7 +21,7 @@ class DbMysql {
 	private function get_connect() {
 		$connect = mysql_connect ( $this->db_info ['host'], $this->db_info ['user'], $this->db_info ['password'] );
 		if (! $connect) {
-			die ( 'Could not connect:' . mysql_error () );
+			die ( 'Could not connect: ' . mysql_error () );
 		}
 		//add by pantingwen@hotmail.com add for:中文乱码
 		mysql_query("SET NAMES 'utf8'",$connect);//设置字符编码，这里必须是utf8不是utf-8
@@ -32,9 +32,9 @@ class DbMysql {
 	public function create_db($db_name) {
 		$this->con = $this->get_connect ();
 		if (mysql_query ( "CREATE DATABASE " . $db_name, $this->con )) {
-			$this->log_message("Database created");
+			echo "Database created";
 		} else {
-			$this->log_message("Error creating database: " . mysql_error ());
+			echo "Error creating database: " . mysql_error ();
 		}
 		mysql_close ( $this->con );
 	}
@@ -51,7 +51,7 @@ class DbMysql {
 				$this->create_db ( $db_name );
 				mysql_select_db ( $db_name, $this->con );
 			} else {
-				$this->log_message("Database not selectd");
+				echo "Database not selectd";
 			}
 		}
 	}
@@ -62,13 +62,11 @@ class DbMysql {
 		if(mysql_query ( $sql, $this->con )){
 			
 		}else{
-			$this->log_message("shibai". mysql_error ());
+			echo "shibai". mysql_error ();
 		}
 		mysql_close ( $this->con);
 	}
 	
-	//add by pantingwen@gmail.com 20140827 begin
-	//主要返回表查询的结果，以二维数组的形式
 	public function execue_sql_with_result($sql) {
 		$result_array=array();
 		$row=array();
@@ -85,45 +83,11 @@ class DbMysql {
 				}
  			mysql_free_result($res);
 		}else{
-			$this->log_message($sql.'<br/>');
-			$this->log_message("shibai". mysql_error ());
+			echo $sql.'<br/>';
+			echo "shibai". mysql_error ();
 		}
 		mysql_close ( $this->con);
 		return $result_array;
-	}
-	//add by pantingwen@gmail.com 20140827 end
-	
-	//add by pantingwen@gmail.com 20140827 begin
-	//返回数据查询的句柄
-	public function execue_sql_with_table_fields($sql) {
-		$result_array=array();
-		$row=null;
-		$row=array();
-		$property=array();
-		$this->con = $this->get_connect ();
-		$this->select_db ( $this->db_info ['db_name'] );
-		$res=mysql_query ( $sql, $this->con );
-		//循环出所有的字段
-		//zend studio中assignment in condition解决方法 
-		//zend studio中while ($row = mysql_fetch_array($result))出现assignment in condition提示
-		//解决方法：
-		//将之改为：while (($row = mysql_fetch_array($result)) != false)即可。
-		//while($property=mysql_fetch_field($res)){
-		while(($property=mysql_fetch_field($res))!=false){
-			//$property=mysql_fetch_field($res);
-			//$row=array("filed_name"=>$property->name,"filed_require"=>$property->not_null,"filed_type"=>$property->type);
- 			array_push($result_array, $property);
-		}
-		mysql_close ($this->con);
-		return $result_array;
-	}
-	//add by pantingwen@gmail.com 20140827 end
-	
-	//add by pantingwen@gmail.com 20141126 
-	function log_message($message){
-		if(DEBUG_MODE){
-			echo $message;
-		}
 	}
 }
 ?>

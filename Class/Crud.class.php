@@ -59,18 +59,14 @@ class Crud {
 		$sql = 'select * from ' . $table_name . ' where 1=1';
 		if (!empty ( $table_fields )) {
 			foreach ( $table_fields as $key => $value ) {
-				//modify by pantingwen@gmail.com 20140812 修复bug begin
-				/*
 				if (is_numeric ( $value )) {
 					$sql = $sql . ' and ' . $key . '=' . $value . ',';
 				} else {
 					$sql = $sql . ' and ' . $key . '="' . $value . '",';
 				}
-				*/
-				$sql=$sql . ' and ' . $key . '="' . $value . '"';
-				//modify by pantingwen@gmail.com 20140812 修复bug end
+			
 			}
-			//$sql = substr ( $sql, 0, strlen ( $sql ) - 1 ); ---delete by pantingwen@gmail.com 20140812 修复bug 
+			$sql = substr ( $sql, 0, strlen ( $sql ) - 1 );
 		}
 		return $this->db->execue_sql_with_result($sql);
 	}
@@ -90,100 +86,6 @@ class Crud {
 		}
 		//echo $sql;
 		$this->db->execue_sql_no_result ( $sql );
-	}
-	
-	
-	//Author: pantingwen pantingwen@hotmail.com
-	//Date: 2014-7-9
-	//简单查询数据，针对单独的一张表,获取指定字段的数据信息,指定当前页数，每页大小
-	function get_by_page($table_name, $table_fields,$not_table_condition_fields,$order_by_contidion,$page_now,$page_size) {
-		$sql = 'select * from ' . $table_name . ' where 1=1';
-		if (!empty ( $table_fields )) {
-			foreach ( $table_fields as $key => $value ) {
-				//modify by pantingwen@gmail.com 20140812 修复bug begin
-				/*
-				if (is_numeric ( $value )) {
-					$sql = $sql . ' and ' . $key . '=' . $value . ',';
-				} else {
-					$sql = $sql . ' and ' . $key . '="' . $value . '",';
-				}
-				*/
-				$sql=$sql . ' and ' . $key . '="' . $value . '"';
-				//echo "the sql is ".$sql;
-				//modify by pantingwen@gmail.com 20140812 修复bug end
-			}
-			//$sql = substr ( $sql, 0, strlen ( $sql ) - 1 ); ---delete by pantingwen@gmail.com 20140812 修复bug 
-		}
-		//排除条件
-		if (!empty($not_table_condition_fields)){
-			foreach ( $not_table_condition_fields as $key => $value ) {
-				$sql=$sql . ' and ' . $key . '!="' . $value . '"';
-			}
-		}
-		
-		if(!empty($order_by_contidion)){
-			$sql=$sql . ' order by ';
-			foreach ( $order_by_contidion as $key => $value ) {
-				$sql=$sql. $key . ' ' . $value;
-			}
-		}
-		$sql=$sql.' limit '.($page_now-1)*$page_size.','.$page_size;
-		//echo $sql;
-		return $this->db->execue_sql_with_result($sql);
-	}
-	
-	
-//Author: pantingwen pantingwen@hotmail.com
-	//Date: 2014-7-9
-	//简单查询数据，针对单独的一张表,获取指定字段的数据信息,指定当前页数，每页大小
-	function get_by_in($table_name, $table_fields) {
-		$tmp_sql=null;
-		//print_r($table_fields);
-		$sql = 'select * from ' . $table_name . ' where 1=1';
-		if (!empty ( $table_fields )) {
-			foreach ( $table_fields as $key => $value ) {
-				$tmp_sql=" and ".$key." in (";
-				foreach ($value as $my_key=>$my_value){
-					$tmp_sql=$tmp_sql.'"'.$my_value.'",';
-				}
-				$tmp_sql=substr($tmp_sql, 0,strlen($tmp_sql)-1).')';
-				$sql=$sql.$tmp_sql;
-			}
-		}
-		//echo $sql;
-		return $this->db->execue_sql_with_result($sql);
-	}
-	
-	
-//Author: pantingwen pantingwen@hotmail.com
-	//Date: 2014-7-9
-	//简单查询数据，针对单独的一张表,获取指定字段的数据信息,指定当前页数，每页大小
-	function get_total_count($table_name, $table_fields,$not_table_condition_fields) {
-		$sql = 'select count(1) from ' . $table_name . ' where 1=1';
-		if (!empty ( $table_fields )) {
-			foreach ( $table_fields as $key => $value ) {
-				//modify by pantingwen@gmail.com 20140812 修复bug begin
-				/*
-				if (is_numeric ( $value )) {
-					$sql = $sql . ' and ' . $key . '=' . $value . ',';
-				} else {
-					$sql = $sql . ' and ' . $key . '="' . $value . '",';
-				}
-				*/
-				$sql=$sql . ' and ' . $key . '="' . $value . '"';
-				//echo "the sql is ".$sql;
-				//modify by pantingwen@gmail.com 20140812 修复bug end
-			}
-			//$sql = substr ( $sql, 0, strlen ( $sql ) - 1 ); ---delete by pantingwen@gmail.com 20140812 修复bug 
-		}
-		//排除条件
-		if (!empty($not_table_condition_fields)){
-			foreach ( $not_table_condition_fields as $key => $value ) {
-				$sql=$sql . ' and ' . $key . '!="' . $value . '"';
-			}
-		}
-		//echo $sql;
-		return $this->db->execue_sql_with_result($sql);
 	}
 }
 ?>

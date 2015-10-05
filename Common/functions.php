@@ -3,19 +3,29 @@
 //Date: 2014-7-8
 
 
+function get_app(){
+	if(array_key_exists('app',$_GET)){
+             $app = $_GET ['app'];
+        }else{
+             $app='Index';
+        }
+	return $app;
+}
+
+function get_action(){
+	if(array_key_exists('action',$_GET)){
+	     $action=$_GET['action'];
+	}else{
+	     $action="Index";	
+	}
+	return $action;
+}
 //Author: pantingwen pantingwen@hotmail.com
 //Date: 2014-7-8
 //Description:设置要引入的文件路径
 function get_include_file() {
-	$app = $_GET ['app'];
-	$action = $_GET ['action'];
-	if (empty ( $app )) {
-		$app = 'Index';
-	}
-	
-	if (empty ( $action )) {
-		$action = 'Index';
-	}
+        $app=get_app();
+	$action=get_action();	
 	return APP . '/' . $app . '/Action/' . $action . '.action.php';
 }
 
@@ -25,39 +35,14 @@ function get_include_file() {
 function execute($app,$action) {
 	//传递进来的参数为空的话，才去获取URL的地址
 	if(empty($app)){
-		$app = $_GET ['app'];
+		$app = get_app();
 	}
 	if(empty($action)){
-		$action = $_GET ['action'];
-	}
-	if (empty ( $app )) {
-		$app = 'Index';
-	}
-	if (empty ( $action )) {
-		$action = 'Index';
+		$action =get_action();
 	}
 	$new_action = $action . '_Action';
 	$ac = new $new_action ();
-	
-	//add by pantingwen@gmail.com 20140826 begin
-	//for：添加上拦截器的作用
-	//add by pantingwen@gmail.com 20140826 begin
-	//判断改文件对应的拦截器是不是存在，如果存在的话， 也是引入拦截器 
-	if(file_exists(APP . '/' . $app . '/Filter/' . $action . '.filter.php')){
-		include_once APP . '/' . $app . '/Filter/' . $action . '.filter.php';
-		$new_filter = $action . '_Filter';
-		$ft=new $new_filter();
-		$return_data=$ft->file_url_with_rule();
-	}
-	//$return_data['message']
-	//变量是message的时候，表示是web界面，使用jump_url,是errcode的时候表示这是接口
-	if(!empty($return_data['message'])){
-		jump_url("failure", $return_data['message'], $return_data['url'], 3);
-	}else if(!empty($return_data['errcode'])){
-		echo json_encode($return_data);
-	}else{
-		$ac->execute ();
-	}
+	$ac->execute ();
 }
 
 //Author: pantingwen pantingwen@hotmail.com
@@ -130,7 +115,12 @@ function include_used_file() {
 		}
 	}
 	//include APP.'/Index/Model/Index.model.php';//程序使用的Model类
-	$app = $_GET ['app'];
+	
+	//modify by pantingwen@gmail.com begin for:Notice: Undefined index: app
+	if(array_key_exists('app',$_POST)){
+		$app=$_GET['app'];
+	}
+	//modify by pantingwen@gmail.com end for:Notice: Undefined index: app
 	//处理地址里面没有应用的情况
 	if (empty ( $app )) {
 		$app = 'Index';
@@ -190,18 +180,5 @@ function jump_url($jump_type, $jump_message, $jump_url, $jump_time) {
 	$strings=explode('/', $execute_file);
 	return $strings[count($strings)-1];
 }
-
-function get_url($app,$action){
-	return "index.php?app=".$app."&action=".$action;
-}
-
-//created by pantingwen@gmail.com 20140827 begin
-//输出调试信息
-function log_echo($log_level,$message){
-	if($log_level>LOG_LEVEL){
-		echo $message.'<br/>';
-	}
-}
-//created by pantingwen@gmail.com 20140827 end
 
 ?>

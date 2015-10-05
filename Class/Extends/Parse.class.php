@@ -29,7 +29,7 @@ class Parse {
 			$this->_tpl = preg_replace ( $mode, "<?php echo \$this->_vars['$1'];?>", $this->_tpl ); //替换成index.php文件中注入的变量
 		}
 	}
-	//parseIf()方法：解析if语句bool
+	//parseIf()方法：解析if语句
 	private function parseIf() { //if语句模式
 		$modeIf = '/\{if\s+\$([\w]+)\}/';
 		$modeEndIf = '/\{\/if\}/';
